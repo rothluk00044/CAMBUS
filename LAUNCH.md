@@ -1,8 +1,8 @@
-# 🚀 CAMBUS Operations - Ready to Launch
+# CAMBUS Operations - Ready to Launch
 
 Your full-stack Next.js workforce operations app is ready! Everything is configured and seeded with realistic demo data.
 
-## ⚡ Start the App NOW
+## Start the App NOW
 
 Run this command in your terminal:
 
@@ -15,7 +15,7 @@ npm install && npx prisma migrate dev --name init && npm run db:seed && npm run 
 
 ---
 
-## 🎯 What You'll See
+## What You'll See
 
 **Dashboard** (home page)
 - 4 KPI cards: Active employees, staffing gaps, special services, point alerts
@@ -49,7 +49,7 @@ npm install && npx prisma migrate dev --name init && npm run db:seed && npm run 
 
 ---
 
-## 📊 Sample Data Included
+## Sample Data Included
 
 **10 Employees** with varied statuses:
 - Drivers (qualified/unqualified)
@@ -65,18 +65,18 @@ npm install && npx prisma migrate dev --name init && npm run db:seed && npm run 
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-✅ Next.js 15 (App Router)  
-✅ React 18  
-✅ TypeScript (strict mode)  
-✅ Tailwind CSS  
-✅ Prisma ORM  
-✅ SQLite (zero-setup db)
+Next.js 15 (App Router)  
+React 18  
+TypeScript (strict mode)  
+Tailwind CSS  
+Prisma ORM  
+SQLite (zero-setup db)
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 app/                    # Next.js pages & layouts
@@ -102,7 +102,7 @@ prisma/
 
 ---
 
-## 💾 Database Schema
+## Database Schema
 
 **7 Entities:**
 
@@ -118,7 +118,7 @@ All fully relational with proper foreign keys and indexes.
 
 ---
 
-## 🔄 How to Develop
+## How to Develop
 
 **Edit a page:**
 - Files in `app/` auto-refresh in browser
@@ -144,7 +144,7 @@ All fully relational with proper foreign keys and indexes.
 
 ---
 
-## 🎨 Design System
+## Design System
 
 **Colors:** Professional slate palette (dark sidebar, light content)  
 **Spacing:** 8px grid system  
@@ -156,7 +156,7 @@ All matching your original mockup design language.
 
 ---
 
-## ⚙️ Environment
+## Environment
 
 SQLite database is local (no server needed):
 ```
@@ -167,7 +167,7 @@ If needed, switch to PostgreSQL by updating `.env.local` and `prisma/schema.pris
 
 ---
 
-## 🚦 Next Steps After Launch
+## Next Steps After Launch
 
 1. **Explore the app** – Click through all pages
 2. **Check sample data** – Each page has real demo data
@@ -176,7 +176,7 @@ If needed, switch to PostgreSQL by updating `.env.local` and `prisma/schema.pris
 
 ---
 
-## 📝 Commands Reference
+## Commands Reference
 
 ```bash
 # Development
@@ -198,24 +198,24 @@ npx prisma studio    # GUI database browser
 
 ---
 
-## ✅ Checklist
+## Checklist
 
-- ✅ Next.js 15 configured (App Router)
-- ✅ TypeScript strict mode enabled
-- ✅ Tailwind CSS configured
-- ✅ Prisma ORM ready
-- ✅ SQLite database (zero setup)
-- ✅ Sample data seeded
-- ✅ All 5 pages functional
-- ✅ Sidebar navigation working
-- ✅ Database schema designed
-- ✅ Server-side data fetching optimized
-- ✅ Reusable UI components created
-- ✅ Production-ready code quality
+- Next.js 15 configured (App Router)
+- TypeScript strict mode enabled
+- Tailwind CSS configured
+- Prisma ORM ready
+- SQLite database (zero setup)
+- Sample data seeded
+- All 5 pages functional
+- Sidebar navigation working
+- Database schema designed
+- Server-side data fetching optimized
+- Reusable UI components created
+- Production-ready code quality
 
 ---
 
-## 🆘 If Something Goes Wrong
+## If Something Goes Wrong
 
 **"npm: command not found"**
 → Install Node.js from https://nodejs.org/
@@ -231,7 +231,7 @@ npx prisma studio    # GUI database browser
 
 ---
 
-## 🎓 Learn More
+## Learn More
 
 - Check `README.md` for architecture overview
 - Review `SETUP.md` for detailed step-by-step
@@ -240,4 +240,4 @@ npx prisma studio    # GUI database browser
 
 ---
 
-**You're all set! Run that command and enjoy your workforce operations platform! 🚀**
+**You're all set! Run that command and enjoy your workforce operations platform!**
