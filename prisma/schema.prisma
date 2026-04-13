@@ -1,0 +1,200 @@
+// This is your Prisma schema file.
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EmployeeRole {
+  DRIVER
+  SUPERVISOR
+  DISPATCHER
+  ADMIN
+  TRAINEE
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  ON_LEAVE
+  TERMINATED
+  NEEDS_REVIEW
+}
+
+enum TrainingStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETE
+  EXPIRED
+}
+
+enum QualificationType {
+  BIONIC
+  DISPATCH
+  SPECIAL_SERVICE
+  TRAINER
+  OTHER
+}
+
+enum QualificationStatus {
+  NOT_QUALIFIED
+  QUALIFIED
+  PENDING_REVIEW
+  EXPIRED
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  LIMITED
+  UNAVAILABLE
+}
+
+enum Service {
+  MORNING
+  AFTERNOON
+  TRAINING
+  SPECIAL
+}
+
+enum Route {
+  ROUTE_31_RED
+  ROUTE_32_BLUE
+  ROUTE_35_INTERDORM
+  ROUTE_36_RESEARCH_PARK
+  ROUTE_42_HAWKEYE_PENTACREST
+  ROUTE_52_FINKBINE_PENTACREST
+}
+
+enum IncidentType {
+  SIGN_OFF
+  LATE_ARRIVAL
+  EARLY_DEPARTURE
+  ABSENCE
+  OTHER
+}
+
+enum SpecialServiceFillStatus {
+  OPEN
+  PARTIAL
+  FILLED
+  CANCELLED
+}
+
+enum CoverageNeedStatus {
+  OPEN
+  NEEDS_BACKUP
+  REVIEWING_OPTIONS
+  COVERED
+  CANCELLED
+}
+
+model Employee {
+  id                    String                      @id @default(cuid())
+  employeeId            String                      @unique
+  name                  String
+  email                 String                      @unique
+  phone                 String?
+  role                  EmployeeRole                @default(DRIVER)
+  status                EmployeeStatus              @default(ACTIVE)
+  seniority             String?
+  primaryRoute          Route?
+  primaryService        Service?
+  trainingStatus        TrainingStatus              @default(NOT_STARTED)
+  bionicQualified       Boolean                     @default(false)
+  dispatchQualified     Boolean                     @default(false)
+  notes                 String?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+
+  // Relations
+  availability          Availability[]
+  incidents             Incident[]
+  qualifications        Qualification[]
+  auditLogs             AuditLog[]                  @relation("ChangedBy")
+  signedOffIncidents    Incident[]                  @relation("EnteredBy")
+}
+
+model Availability {
+  id                    String                      @id @default(cuid())
+  employeeId            String
+  employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  dayOfWeek             Int                         // 0 = Monday, 4 = Friday
+  availabilityStatus    AvailabilityStatus          @default(AVAILABLE)
+  temporaryOverride     AvailabilityStatus?
+  overrideReason        String?
+  notes                 String?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+
+  @@unique([employeeId, dayOfWeek])
+}
+
+model Qualification {
+  id                    String                      @id @default(cuid())
+  employeeId            String
+  employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  qualificationType     QualificationType
+  status                QualificationStatus         @default(NOT_QUALIFIED)
+  earnedAt              DateTime?
+  expiresAt             DateTime?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+
+  @@unique([employeeId, qualificationType])
+}
+
+model Incident {
+  id                    String                      @id @default(cuid())
+  employeeId            String
+  employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date                  DateTime
+  type                  IncidentType
+  reason                String?
+  points                Float                       @default(0)
+  enteredById           String
+  enteredBy             Employee                    @relation("EnteredBy", fields: [enteredById], references: [id])
+  relatedShift          String?
+  notes                 String?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+}
+
+model SpecialService {
+  id                    String                      @id @default(cuid())
+  title                 String
+  date                  DateTime
+  route                 Route
+  service               Service
+  staffingNeed          Int
+  fillStatus            SpecialServiceFillStatus    @default(OPEN)
+  notes                 String?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+}
+
+model CoverageNeed {
+  id                    String                      @id @default(cuid())
+  route                 Route
+  service               Service
+  time                  String
+  needDescription       String
+  status                CoverageNeedStatus          @default(OPEN)
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+}
+
+model AuditLog {
+  id                    String                      @id @default(cuid())
+  entityType            String
+  entityId              String
+  action                String
+  changedById           String
+  changedBy             Employee                    @relation("ChangedBy", fields: [changedById], references: [id])
+  changeSummary         String
+  createdAt             DateTime                    @default(now())
+}
