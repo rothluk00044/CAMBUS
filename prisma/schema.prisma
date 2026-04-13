@@ -1,0 +1,118 @@
+// This is your Prisma schema file.
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id                    String                      @id @default(cuid())
+  employeeId            String                      @unique
+  name                  String
+  email                 String                      @unique
+  phone                 String?
+  role                  String                      @default("DRIVER")
+  status                String                      @default("ACTIVE")
+  seniority             String?
+  primaryRoute          String?
+  primaryService        String?
+  trainingStatus        String                      @default("NOT_STARTED")
+  bionicQualified       Boolean                     @default(false)
+  dispatchQualified     Boolean                     @default(false)
+  notes                 String?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+
+  // Relations
+  availability          Availability[]
+  incidents             Incident[]
+  qualifications        Qualification[]
+  auditLogs             AuditLog[]                  @relation("ChangedBy")
+  signedOffIncidents    Incident[]                  @relation("EnteredBy")
+}
+
+model Availability {
+  id                    String                      @id @default(cuid())
+  employeeId            String
+  employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  dayOfWeek             Int                         // 0 = Monday, 4 = Friday
+  availabilityStatus    String                      @default("AVAILABLE")
+  temporaryOverride     String?
+  overrideReason        String?
+  notes                 String?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+
+  @@unique([employeeId, dayOfWeek])
+}
+
+model Qualification {
+  id                    String                      @id @default(cuid())
+  employeeId            String
+  employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  qualificationType     String
+  status                String                      @default("NOT_QUALIFIED")
+  earnedAt              DateTime?
+  expiresAt             DateTime?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+
+  @@unique([employeeId, qualificationType])
+}
+
+model Incident {
+  id                    String                      @id @default(cuid())
+  employeeId            String
+  employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date                  DateTime
+  type                  String
+  reason                String?
+  points                Float                       @default(0)
+  enteredById           String
+  enteredBy             Employee                    @relation("EnteredBy", fields: [enteredById], references: [id])
+  relatedShift          String?
+  notes                 String?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+}
+
+model SpecialService {
+  id                    String                      @id @default(cuid())
+  title                 String
+  date                  DateTime
+  route                 String
+  service               String
+  staffingNeed          Int
+  fillStatus            String                      @default("OPEN")
+  notes                 String?
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+}
+
+model CoverageNeed {
+  id                    String                      @id @default(cuid())
+  route                 String
+  service               String
+  time                  String
+  needDescription       String
+  status                String                      @default("OPEN")
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+}
+
+model AuditLog {
+  id                    String                      @id @default(cuid())
+  entityType            String
+  entityId              String
+  action                String
+  changedById           String
+  changedBy             Employee                    @relation("ChangedBy", fields: [changedById], references: [id])
+  changeSummary         String
+  createdAt             DateTime                    @default(now())
+}
+
