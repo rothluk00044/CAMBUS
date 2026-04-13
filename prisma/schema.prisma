@@ -10,101 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum EmployeeRole {
-  DRIVER
-  SUPERVISOR
-  DISPATCHER
-  ADMIN
-  TRAINEE
-}
-
-enum EmployeeStatus {
-  ACTIVE
-  INACTIVE
-  ON_LEAVE
-  TERMINATED
-  NEEDS_REVIEW
-}
-
-enum TrainingStatus {
-  NOT_STARTED
-  IN_PROGRESS
-  COMPLETE
-  EXPIRED
-}
-
-enum QualificationType {
-  BIONIC
-  DISPATCH
-  SPECIAL_SERVICE
-  TRAINER
-  OTHER
-}
-
-enum QualificationStatus {
-  NOT_QUALIFIED
-  QUALIFIED
-  PENDING_REVIEW
-  EXPIRED
-}
-
-enum AvailabilityStatus {
-  AVAILABLE
-  LIMITED
-  UNAVAILABLE
-}
-
-enum Service {
-  MORNING
-  AFTERNOON
-  TRAINING
-  SPECIAL
-}
-
-enum Route {
-  ROUTE_31_RED
-  ROUTE_32_BLUE
-  ROUTE_35_INTERDORM
-  ROUTE_36_RESEARCH_PARK
-  ROUTE_42_HAWKEYE_PENTACREST
-  ROUTE_52_FINKBINE_PENTACREST
-}
-
-enum IncidentType {
-  SIGN_OFF
-  LATE_ARRIVAL
-  EARLY_DEPARTURE
-  ABSENCE
-  OTHER
-}
-
-enum SpecialServiceFillStatus {
-  OPEN
-  PARTIAL
-  FILLED
-  CANCELLED
-}
-
-enum CoverageNeedStatus {
-  OPEN
-  NEEDS_BACKUP
-  REVIEWING_OPTIONS
-  COVERED
-  CANCELLED
-}
-
 model Employee {
   id                    String                      @id @default(cuid())
   employeeId            String                      @unique
   name                  String
   email                 String                      @unique
   phone                 String?
-  role                  EmployeeRole                @default(DRIVER)
-  status                EmployeeStatus              @default(ACTIVE)
+  role                  String                      @default("DRIVER")
+  status                String                      @default("ACTIVE")
   seniority             String?
-  primaryRoute          Route?
-  primaryService        Service?
-  trainingStatus        TrainingStatus              @default(NOT_STARTED)
+  primaryRoute          String?
+  primaryService        String?
+  trainingStatus        String                      @default("NOT_STARTED")
   bionicQualified       Boolean                     @default(false)
   dispatchQualified     Boolean                     @default(false)
   notes                 String?
@@ -124,8 +41,8 @@ model Availability {
   employeeId            String
   employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   dayOfWeek             Int                         // 0 = Monday, 4 = Friday
-  availabilityStatus    AvailabilityStatus          @default(AVAILABLE)
-  temporaryOverride     AvailabilityStatus?
+  availabilityStatus    String                      @default("AVAILABLE")
+  temporaryOverride     String?
   overrideReason        String?
   notes                 String?
   createdAt             DateTime                    @default(now())
@@ -138,8 +55,8 @@ model Qualification {
   id                    String                      @id @default(cuid())
   employeeId            String
   employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  qualificationType     QualificationType
-  status                QualificationStatus         @default(NOT_QUALIFIED)
+  qualificationType     String
+  status                String                      @default("NOT_QUALIFIED")
   earnedAt              DateTime?
   expiresAt             DateTime?
   createdAt             DateTime                    @default(now())
@@ -153,7 +70,7 @@ model Incident {
   employeeId            String
   employee              Employee                    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   date                  DateTime
-  type                  IncidentType
+  type                  String
   reason                String?
   points                Float                       @default(0)
   enteredById           String
@@ -168,10 +85,10 @@ model SpecialService {
   id                    String                      @id @default(cuid())
   title                 String
   date                  DateTime
-  route                 Route
-  service               Service
+  route                 String
+  service               String
   staffingNeed          Int
-  fillStatus            SpecialServiceFillStatus    @default(OPEN)
+  fillStatus            String                      @default("OPEN")
   notes                 String?
   createdAt             DateTime                    @default(now())
   updatedAt             DateTime                    @updatedAt
@@ -179,11 +96,11 @@ model SpecialService {
 
 model CoverageNeed {
   id                    String                      @id @default(cuid())
-  route                 Route
-  service               Service
+  route                 String
+  service               String
   time                  String
   needDescription       String
-  status                CoverageNeedStatus          @default(OPEN)
+  status                String                      @default("OPEN")
   createdAt             DateTime                    @default(now())
   updatedAt             DateTime                    @updatedAt
 }
@@ -198,3 +115,4 @@ model AuditLog {
   changeSummary         String
   createdAt             DateTime                    @default(now())
 }
+
