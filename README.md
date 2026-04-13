@@ -93,7 +93,7 @@ prisma/
 6. **CoverageNeed** – Open shifts and staffing gaps
 7. **AuditLog** – Change tracking for audit trail
 
-## Sample Data
+## Sample Data, (will upgrade to dynamic entries next branch)
 
 The database seeds with:
 - 10 sample employees with various roles and qualifications
@@ -102,7 +102,7 @@ The database seeds with:
 - Recent incidents (sign-offs, late arrivals)
 - Coverage needs and special services
 
-## Current Routes & Services
+## Current Routes & Services, (will also add in all routes and services next branch)
 
 **Routes:**
 - 31 Red Route
