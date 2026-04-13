@@ -1,0 +1,2 @@
+# CAMBUS
+CAMBUS scheduling application
